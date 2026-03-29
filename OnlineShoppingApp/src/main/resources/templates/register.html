@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Register</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    font-family: Arial, sans-serif;
+}
+
+.card {
+    width: 380px;
+    padding: 30px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    color: white;
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #3b82f6;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #2563eb;
+}
+
+a {
+    display: block;
+    margin-top: 10px;
+    color: #93c5fd;
+}
+</style>
+
+</head>
+<body>
+
+<div class="card">
+
+<h2>Register</h2>
+
+<div th:if="${Success}">
+    <p style="color: lightgreen;" th:text="${Success}"></p>
+</div>
+
+<div th:if="${errorMsg}">
+    <p style="color: red;" th:text="${errorMsg}"></p>
+</div>
+
+<form th:action="@{/regForm}" th:object="${user}" method="post">
+    <input type="text" placeholder="Name" th:field="*{username}"/>
+    <input type="text" placeholder="Date of Birth" th:field="*{dob}"/>
+    <input type="text" placeholder="Email" th:field="*{email}"/>
+    <input type="password" placeholder="Password" th:field="*{password}"/>
+    <input type="text" placeholder="Phone Number" th:field="*{phoneNumber}"/>
+
+    <button type="submit">Register</button>
+</form>
+
+<a th:href="@{/loginPage}">Already have an account? Login</a>
+
+</div>
+
+</body>
+</html>

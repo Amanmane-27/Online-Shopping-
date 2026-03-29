@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Add Product</title>
+
+<style>
+body {
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    font-family: Arial;
+}
+
+.card {
+    width:400px;
+    padding:30px;
+    border-radius:15px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    color:white;
+    text-align:center;
+}
+
+input {
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border:none;
+    border-radius:8px;
+}
+
+button {
+    width:100%;
+    padding:10px;
+    background:#3b82f6;
+    border:none;
+    border-radius:8px;
+    color:white;
+    font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Add Product</h2>
+
+<form th:action="@{/saveProduct}" method="post" th:object="${product}">
+    <input type="text" th:field="*{prodName}" placeholder="Product Name"/>
+    <input type="text" th:field="*{prodType}" placeholder="Category"/>
+    <input type="text" th:field="*{prodInfo}" placeholder="Description"/>
+    <input type="number" th:field="*{prodPrice}" placeholder="Price"/>
+    <input type="number" th:field="*{prodQuantity}" placeholder="Quantity"/>
+
+    <button type="submit">Save Product</button>
+</form>
+
+<a th:href="@{/products}" style="color:lightblue;">View Products</a>
+
+</div>
+
+</body>
+</html>
