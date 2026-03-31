@@ -1,63 +1,103 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Products</title>
+<meta charset="UTF-8">
+<title>Manage Products</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
 body {
-    background:#0f172a;
-    color:white;
-    font-family:Arial;
+    background: #0f172a;
+    color: white;
+    font-family: Arial, sans-serif;
 }
 
-.container {
-    display:flex;
-    flex-wrap:wrap;
-    gap:20px;
-    padding:20px;
+.navbar { background: #020617; }
+
+.table { color: white; }
+
+.table th {
+    background: #1e293b;
+    color: #38bdf8;
 }
 
-.card {
-    width:250px;
-    background:#020617;
-    padding:15px;
-    border-radius:10px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.5);
+.table td {
+    background: #0f172a;
+    vertical-align: middle;
 }
 
-button {
-    background:red;
-    border:none;
-    padding:5px 10px;
-    color:white;
-    border-radius:5px;
-    cursor:pointer;
+.no-products {
+    text-align: center;
+    padding: 60px;
+    color: #94a3b8;
 }
 </style>
-
 </head>
 
 <body>
 
-<h1 style="text-align:center;">Products</h1>
-
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
 <div class="container">
+    <a class="navbar-brand text-info fw-bold">Ekart</a>
+    <div class="ms-auto">
+        <a th:href="@{'/main/' + ${userId}}" class="btn btn-outline-light me-2">Home</a>
+        <a th:href="@{'/cart/' + ${userId}}" class="btn btn-warning me-2">Cart 🛒</a>
+        <a th:href="@{'/orders/' + ${userId}}" class="btn btn-outline-success me-2">My Orders</a>
+        <a th:href="@{/loginPage}" class="btn btn-outline-danger">Logout</a>
+    </div>
+</div>
+</nav>
 
-<div class="card" th:each="p : ${products}">
-    <h3 th:text="${p.prodName}"></h3>
-    <p th:text="${p.prodType}"></p>
-    <p th:text="${p.prodInfo}"></p>
-    <p>₹ <span th:text="${p.prodPrice}"></span></p>
-    <p>Stock: <span th:text="${p.prodQuantity}"></span></p>
+<div class="container mt-4">
 
-    <a th:href="@{'/deleteProduct/' + ${p.prodId}}">
-        <button>Delete</button>
-    </a>
+<h2 class="text-center mb-4">📦 Manage Products</h2>
+
+<div class="text-end mb-3">
+    <a th:href="@{'/addProduct/' + ${userId}}" class="btn btn-info">➕ Add New Product</a>
+</div>
+
+<!-- No products -->
+<div th:if="${#lists.isEmpty(products)}" class="no-products">
+    <h4>No products found.</h4>
+    <p>Click "Add New Product" to get started.</p>
+</div>
+
+<!-- Products table -->
+<div th:if="${!#lists.isEmpty(products)}">
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Price (₹)</th>
+        <th>Stock</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p : ${products}">
+        <td th:text="${p.prodId}">1</td>
+        <td th:text="${p.prodName}">Name</td>
+        <td th:text="${p.prodType}">Type</td>
+        <td th:text="${p.prodInfo}">Info</td>
+        <td th:text="${p.prodPrice}">0</td>
+        <td th:text="${p.prodQuantity}">0</td>
+        <td>
+            <a th:href="@{'/editProduct/' + ${userId} + '/' + ${p.prodId}}"
+               class="btn btn-warning btn-sm me-1">✏️ Edit</a>
+            <a th:href="@{'/deleteProduct/' + ${userId} + '/' + ${p.prodId}}"
+               class="btn btn-danger btn-sm"
+               onclick="return confirm('Are you sure you want to delete this product?')">🗑️ Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </div>
 
 </div>
-
-<a href="/addProduct" style="margin:20px; display:block; color:lightblue;">Add New Product</a>
 
 </body>
 </html>

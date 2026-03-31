@@ -36,48 +36,49 @@ public class OrderServiceImp implements OrderService {
 
         List<Cart> cartItems = cartRepo.findByUserId(userId);
 
+        if (cartItems.isEmpty()) {
+            return; // nothing to order
+        }
+
         Order order = new Order();
         order.setUserId(userId);
         order.setOrderDate(LocalDateTime.now());
         order.setStatus("PLACED");
 
         double total = 0;
-        
+
         order = orderRepo.save(order);
 
         for (Cart c : cartItems) {
 
             Product p = productRepo.findById(c.getProductId()).orElse(null);
 
-            OrderItem item = new OrderItem();
-            item.setOrderId(order.getId());
-            item.setProductId(p.getProdId());
-            item.setQuantity(c.getQuantity());
-            item.setPrice(p.getProdPrice());
+            if (p != null) {
+                OrderItem item = new OrderItem();
+                item.setOrderId(order.getId());
+                item.setProductId(p.getProdId());
+                item.setQuantity(c.getQuantity());
+                item.setPrice(p.getProdPrice());
 
-            total += p.getProdPrice() * c.getQuantity();
+                total += p.getProdPrice() * c.getQuantity();
 
-            orderItemRepo.save(item);
+                orderItemRepo.save(item);
 
-            p.setProdQuantity(p.getProdQuantity() - c.getQuantity());
-            productRepo.save(p);
+                // reduce stock
+                p.setProdQuantity(p.getProdQuantity() - c.getQuantity());
+                productRepo.save(p);
+            }
         }
 
         order.setTotalAmount(total);
         orderRepo.save(order);
 
-        // clear cart
+        // clear cart after placing order
         cartRepo.deleteAll(cartItems);
     }
 
     @Override
-    public List<Order> getOrders(Long userId) {
+    public List<Order> getOrdersByUser(Long userId) {
         return orderRepo.findByUserId(userId);
     }
-
-	@Override
-	public List<Order> getorder(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

@@ -16,17 +16,14 @@ public class OrderController {
 
     @GetMapping("/placeOrder/{userId}")
     public String placeOrder(@PathVariable Long userId) {
-
         service.placeOrder(userId);
-
         return "redirect:/orders/" + userId;
     }
 
     @GetMapping("/orders/{userId}")
     public String viewOrders(@PathVariable Long userId, Model model) {
-
-        model.addAttribute("orders", service.getOrders(userId));
-
-        return "redirect:order/list";
+        model.addAttribute("orders", service.getOrdersByUser(userId));
+        model.addAttribute("userId", userId);
+        return "order/list";
     }
 }

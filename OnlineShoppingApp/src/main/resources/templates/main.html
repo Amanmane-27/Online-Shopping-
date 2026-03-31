@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 <meta charset="UTF-8">
@@ -24,12 +24,36 @@ body { background:#0f172a; color:white; }
 .card img {
     height:200px;
     object-fit:cover;
+    border-radius:12px 12px 0 0;
+}
+
+.card-body{
+	color: rgb(255, 255, 255);
 }
 
 .btn-custom {
     background:#38bdf8;
     border:none;
+    color:white;
 }
+
+.btn-custom:hover {
+    background:#0ea5e9;
+    color:white;
+}
+
+.no-products {
+    text-align:center;
+    padding:60px;
+    color:rgb(255, 255, 255);
+}
+.text-secondary{
+	color: white;
+}
+.prod-name{
+	color: white;
+}
+
 </style>
 </head>
 
@@ -41,209 +65,40 @@ body { background:#0f172a; color:white; }
     <a class="navbar-brand text-info fw-bold">Ekart</a>
 
     <div class="ms-auto">
-        <a href="index.html" class="btn btn-outline-light me-2">Home</a>
-        <a href="cart.html" class="btn btn-warning me-2">Cart 🛒</a>
-        <a href="login.html" class="btn btn-outline-info me-2">Login</a>
-        <a href="register.html" class="btn btn-info">Register</a>
+        <a th:href="@{'/main/' + ${userId}}" class="btn btn-outline-light me-2">Home</a>
+        <a th:href="@{'/products/' + ${userId}}" class="btn btn-outline-info me-2">Manage Products</a> 
+        <a th:href="@{'/cart/' + ${userId}}" class="btn btn-warning me-2">Cart 🛒</a>
+        <a th:href="@{'/orders/' + ${userId}}" class="btn btn-outline-success me-2">My Orders</a>
+        <a th:href="@{/loginPage}" class="btn btn-outline-danger">Logout</a>
     </div>
 </div>
 </nav>
 
-<!-- PRODUCTS -->
+<!-- PRODUCTS FROM DATABASE -->
 <div class="container mt-4">
+
+<h2 class="text-center mb-4">🛍️ Browse Products</h2>
+
+<!-- If no products exist -->
+<div th:if="${#lists.isEmpty(products)}" class="no-products">
+    <h4>No products available yet.</h4>
+    <a th:href="@{'/addProduct/' + ${userId}}" class="btn btn-info mt-3">Add First Product</a>
+</div>
+
 <div class="row g-4">
 
-<!-- 1 -->
-<div class="col-md-3">
+<div class="col-md-3" th:each="p : ${products}">
 <div class="card">
-<img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff">
+<img th:src="${p.imageUrl != null and !p.imageUrl.isEmpty()} ? ${p.imageUrl} : 'https://via.placeholder.com/300x200?text=No+Image'"
+     alt="Product Image">
 <div class="card-body">
-<h6>Running Shoes</h6>
-<p>₹1999</p>
-<input type="number" id="q1" value="1" min="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Running Shoes',1999,'q1')">Add</button>
-</div>
-</div>
-</div>
+<h6 class="prod-name" th:text="${p.prodName}">Product Name</h6>
+<p class="text-muted" th:text="${p.prodType}">Category</p>
+<p>₹ <span th:text="${p.prodPrice}">0</span></p>
+<p class="text-secondary">Stock: <span th:text="${p.prodQuantity}">0</span></p>
 
-<!-- 2 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1511385348-a52b4a160dc2">
-<div class="card-body">
-<h6>Smart Watch</h6>
-<p>₹2499</p>
-<input type="number" id="q2" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Smart Watch',2499,'q2')">Add</button>
-</div>
-</div>
-</div>
-
-<!-- 3 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1518444065439-e933c06ce9cd">
-<div class="card-body">
-<h6>Headphones</h6>
-<p>₹999</p>
-<input type="number" id="q3" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Headphones',999,'q3')">Add</button>
-</div>
-</div>
-</div>
-
-<!-- 4 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1585386959984-a41552231658">
-<div class="card-body">
-<h6>Backpack</h6>
-<p>₹899</p>
-<input type="number" id="q4" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Backpack',899,'q4')">Add</button>
-</div>
-</div>
-</div>
-
-<!-- 5 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1583394838336-acd977736f90">
-<div class="card-body">
-<h6>Gaming Mouse</h6>
-<p>₹599</p>
-<input type="number" id="q5" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Gaming Mouse',599,'q5')">Add</button>
-</div>
-</div>
-</div>
-
-<!-- 6 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1580894908361-967195033215">
-<div class="card-body">
-<h6>Bluetooth Speaker</h6>
-<p>₹1299</p>
-<input type="number" id="q6" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Speaker',1299,'q6')">Add</button>
-</div>
-</div>
-</div>
-
-<!-- 7 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc">
-<div class="card-body">
-<h6>Phone Case</h6>
-<p>₹299</p>
-<input type="number" id="q7" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Phone Case',299,'q7')">Add</button>
-</div>
-</div>
-</div>
-
-<!-- 8 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1503602642458-232111445657">
-<div class="card-body">
-<h6>Desk Lamp</h6>
-<p>₹499</p>
-<input type="number" id="q8" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Lamp',499,'q8')">Add</button>
-</div>
-</div>
-</div>
-
-<!-- 9 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3">
-<div class="card-body">
-<h6>Keyboard</h6>
-<p>₹899</p>
-<input type="number" id="q9" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Keyboard',899,'q9')">Add</button>
-</div>
-</div>
-</div>
-
-<!-- 10 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5">
-<div class="card-body">
-<h6>Laptop</h6>
-<p>₹45999</p>
-<input type="number" id="q10" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Laptop',45999,'q10')">Add</button>
-</div>
-</div>
-</div>
-
-<!-- 11 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8">
-<div class="card-body">
-<h6>MacBook</h6>
-<p>₹89999</p>
-<input type="number" id="q11" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('MacBook',89999,'q11')">Add</button>
-</div>
-</div>
-</div>
-
-<!-- 12 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb">
-<div class="card-body">
-<h6>Smartphone</h6>
-<p>₹15999</p>
-<input type="number" id="q12" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Phone',15999,'q12')">Add</button>
-</div>
-</div>
-</div>
-
-<!-- 13 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1580910051074-3eb694886505">
-<div class="card-body">
-<h6>Tablet</h6>
-<p>₹12999</p>
-<input type="number" id="q13" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Tablet',12999,'q13')">Add</button>
-</div>
-</div>
-</div>
-
-<!-- 14 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1606813909353-9f9d8b53c0bb">
-<div class="card-body">
-<h6>Camera</h6>
-<p>₹29999</p>
-<input type="number" id="q14" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Camera',29999,'q14')">Add</button>
-</div>
-</div>
-</div>
-
-<!-- 15 -->
-<div class="col-md-3">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1585386959984-a41552231658">
-<div class="card-body">
-<h6>Travel Bag</h6>
-<p>₹1499</p>
-<input type="number" id="q15" value="1" class="form-control mb-2">
-<button class="btn btn-custom w-100" onclick="addToCart('Travel Bag',1499,'q15')">Add</button>
+<a th:href="@{'/addToCart/' + ${userId} + '/' + ${p.prodId}}"
+   class="btn btn-custom w-100">🛒 Add to Cart</a>
 </div>
 </div>
 </div>
@@ -251,22 +106,6 @@ body { background:#0f172a; color:white; }
 </div>
 </div>
 
-<script>
-function addToCart(name, price, qtyId) {
-    let qty = document.getElementById(qtyId).value;
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    cart.push({
-        name: name,
-        price: price,
-        qty: parseInt(qty)
-    });
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    alert(name + " added to cart!");
-}
-</script>
 <!-- FOOTER -->
 <footer class="mt-5" style="background:#020617; color:#94a3b8; padding:40px 0;">
 
@@ -283,10 +122,10 @@ function addToCart(name, price, qtyId) {
     <div class="col-md-3">
         <h6>Quick Links</h6>
         <ul class="list-unstyled">
-            <li><a href="index.html" class="text-decoration-none text-light">Home</a></li>
-            <li><a th:href="cart.html" class="text-decoration-none text-light">Cart</a></li>
-            <li><a href="login.html" class="text-decoration-none text-light">Login</a></li>
-            <li><a href="register.html" class="text-decoration-none text-light">Register</a></li>
+            <li><a th:href="@{'/main/' + ${userId}}" class="text-decoration-none text-light">Home</a></li>
+            <li><a th:href="@{'/cart/' + ${userId}}" class="text-decoration-none text-light">Cart</a></li>
+            <li><a th:href="@{'/orders/' + ${userId}}" class="text-decoration-none text-light">Orders</a></li>
+            <li><a th:href="@{'/products/' + ${userId}}" class="text-decoration-none text-light">Manage Products</a></li>
         </ul>
     </div>
 
@@ -310,7 +149,7 @@ function addToCart(name, price, qtyId) {
 <hr style="border-color:#334155;">
 
 <div class="text-center">
-    <p>© 2026 Ekart | Designed by Prasad Savale</p>
+    <p>&copy; 2026 Ekart | Online Shopping App</p>
 </div>
 
 </div>

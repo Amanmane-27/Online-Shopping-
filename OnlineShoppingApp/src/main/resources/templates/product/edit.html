@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Add Product</title>
+<title>Edit Product</title>
 
 <style>
 body {
@@ -38,7 +38,7 @@ input {
 button {
     width:100%;
     padding:10px;
-    background:#3b82f6;
+    background:#f59e0b;
     border:none;
     border-radius:8px;
     color:white;
@@ -47,7 +47,7 @@ button {
 }
 
 button:hover {
-    background:#2563eb;
+    background:#d97706;
 }
 
 a {
@@ -63,18 +63,20 @@ a {
 
 <div class="card">
 
-<h2>➕ Add Product</h2>
+<h2>✏️ Edit Product</h2>
 
-<form th:action="@{'/saveProduct/' + ${userId}}" method="post" th:object="${product}">
-	
-	<label>Product Name</label><input type="text" th:field="*{prodName}" placeholder="Product Name" required/>
-	<label>Category</label><input type="text" th:field="*{prodType}" placeholder="Category"/>
-	<label>Description</label><input type="text" th:field="*{prodInfo}" placeholder="Description"/>
-	<label>price</label><input type="number" th:field="*{prodPrice}" placeholder="Price" step="0.01" required/>
-	<label>Quatity</label><input type="number" th:field="*{prodQuantity}" placeholder="Quantity" required/>
-	<label>Image URl</label><input type="text" th:field="*{imageUrl}" placeholder="Image URL (optional)"/>
+<form th:action="@{'/updateProduct/' + ${userId}}" method="post" th:object="${product}">
+    <!-- Hidden field for product ID so JPA updates instead of creating new -->
+    <input type="hidden" th:field="*{prodId}"/>
 
-    <button type="submit">Save Product</button>
+    <input type="text" th:field="*{prodName}" placeholder="Product Name" required/>
+    <input type="text" th:field="*{prodType}" placeholder="Category"/>
+    <input type="text" th:field="*{prodInfo}" placeholder="Description"/>
+    <input type="number" th:field="*{prodPrice}" placeholder="Price" step="0.01" required/>
+    <input type="number" th:field="*{prodQuantity}" placeholder="Quantity" required/>
+    <input type="text" th:field="*{imageUrl}" placeholder="Image URL (optional)"/>
+
+    <button type="submit">Update Product</button>
 </form>
 
 <a th:href="@{'/products/' + ${userId}}">⬅ Back to Products</a>
